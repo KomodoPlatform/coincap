@@ -1,6 +1,20 @@
 <template>
     <div>
-        Chain details: {{ chain }}
+        <loader v-if="isLoading"></loader>
+        <div class="row m-top-30">
+            <div class="col-4">
+                <h3>
+                    {{ chain.name }}
+                    <span style="font-size:15px">{{ chain.ticker }}</span>
+                </h3>
+            </div>
+            <div class="col-8">
+                <h3>
+                    {{ chain.price }}
+                    <span style="font-size:15px">({{ chain.change_24h }})</span>
+                </h3>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -11,14 +25,15 @@ export default {
   components: {},
   data: function () {
     return {
-        chain: { 
-            name: 'Komodo', 
-            market_cap: '$777,777,777', 
-            price: '777USD', 
-            vol_24h: '777,777USD', 
-            last_notarization: '2 min ago' 
-        }
+        isLoading: true,
+        chain: { name: 'Komodo (KMD)', id: 'kmd-komodo', market_cap: '$777,777,777', price: '777USD', vol_24h: '777,777USD', change_24h: '+12%', last_notarization: '2 min ago', cmc_rank: 51 }
     }
+  },
+  mounted (){
+    const app = this
+    setTimeout(function(){
+      app.isLoading = false
+    },1000)
   },
   methods: {
     

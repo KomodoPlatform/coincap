@@ -1,19 +1,20 @@
 <template>
   <div class="app">
-    <div class="header">
+    <div class="top-header">
       Cryptocurrencies:  100  •  Markets:  777  •  Market Cap:  $777,777,777  •  24h Vol:  $777,777
+    </div>
+    <div class="header">
+      <h4>
+          <a href="#">
+            <img v-on:click="goToDashboard" class="m-top-30 logo" src="../../public/logo_w.svg" height="30"> 
+          </a>
+          Antara Market Cap
+          <b-form-input class="search" placeholder="Search"></b-form-input>
+      </h4>
     </div>
     <div class="app-body">
       <main class="main">
         <div class="container-fluid">
-          <div class="row">
-            <h2>
-                <img class="m-top-30 logo" src="../../public/logo_w.svg" height="30"> 
-                Antara Market Cap
-                <b-form-input class="search" placeholder="Search"></b-form-input>
-            </h2>
-            <hr>
-          </div>
           <router-view></router-view>
         </div>
       </main>
@@ -36,8 +37,11 @@ export default {
       
     }
   },
-  computed: {
-
+  methods: {
+    goToDashboard(){
+      const app = this
+      app.$router.push({ path: `/` }) 
+    }
   }
 }
 </script>
@@ -46,9 +50,13 @@ export default {
   .main{
     margin-top:10px
   }
-  .header, .footer{
+  .header, .footer, .top-header{
     font-size:12px;
     padding:10px;
+  }
+  .header{
+    border-bottom:1px solid #eee;
+    padding-bottom:15px;
   }
   h2{
     width:100%;
@@ -57,7 +65,7 @@ export default {
   .logo{
       float:left;
       margin-right:20px;
-      margin-top:2px;
+      margin-top:-3px;
   }
   .search{
       float:right;

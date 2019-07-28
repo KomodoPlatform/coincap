@@ -14,3 +14,10 @@ body{
     cursor: pointer;
     opacity:0.7;
 }
+
+.table-hover tbody tr, .table.b-table > thead > tr > th[aria-sort], .table.b-table > thead > tr > th, .table.b-table > thead > tr > td, .table.b-table > tfoot > tr > th, .table.b-table > tfoot > tr > td {
+    color:#fff!important;
+}
+.table.b-table > thead > tr > th{
+    border:0
+}

@@ -1,7 +1,8 @@
 <template>
     <div>
         <loader v-if="isLoading"></loader>
-        <b-table class="f-white" striped hover :items="items"></b-table>
+        <h2 class="text-center m-top-30">Top Antara chains ordered by Market Capitalization</h2>
+        <b-table responsive class="f-white m-top-30" @row-clicked="goToChain" striped hover :fields="fields" :items="items"></b-table>
     </div>
 </template>
 
@@ -13,8 +14,45 @@ export default {
   data: function () {
     return {
         isLoading: true,
+        fields: [
+          {
+            key: 'name',
+            sortable: true,
+            label: 'AssetChain (Ticker)'
+          },
+          {
+            key: 'market_cap',
+            sortable: true,
+            label: 'Market Cap'
+          },
+          {
+            key: 'cmc_rank',
+            sortable: true,
+            label: 'Coin Market Cap Rank'
+          },
+          {
+            key: 'price',
+            sortable: true,
+            label: 'Price'
+          },
+          {
+            key: 'vol_24h',
+            sortable: true,
+            label: '24h Volume'
+          },
+          {
+            key: 'change_24h',
+            sortable: true,
+            label: '24h Change'
+          },
+          {
+            key: 'last_notarization',
+            sortable: false,
+            label: 'Last block notarized'
+          },
+        ],
         items: [
-          { name: 'Komodo', market_cap: '$777,777,777', price: '777USD', vol_24h: '777,777USD', last_notarization: '2 min ago' }
+          { name: 'Komodo (KMD)', id: 'kmd-komodo', market_cap: '$777,777,777', price: '777USD', vol_24h: '777,777USD', change_24h: '+12%', last_notarization: '2 min ago', cmc_rank: 51 }
         ]
     }
   },
@@ -25,7 +63,10 @@ export default {
     },1000)
   },
   methods: {
-    
+    goToChain(chain){
+      const app = this
+      app.$router.push({ path: `/chains/${chain.id}` }) 
+    }
   }
 }
 </script>
