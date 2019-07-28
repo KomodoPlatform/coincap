@@ -7,3 +7,10 @@ body{
 .app-body{
     margin-top:0px!important
 }
+
+.table-hover tbody tr:hover{
+    color:#fff!important;
+    background: transparent;
+    cursor: pointer;
+    opacity:0.7;
+}

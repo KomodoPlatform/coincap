@@ -6,6 +6,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 // Views
 const Dashboard = () => import('@/views/Dashboard')
+const AssetChain = () => import('@/views/AssetChain')
 
 Vue.use(Router)
 
@@ -16,14 +17,25 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard',
       name: 'Home',
       component: DefaultContainer,
       children: [
         {
-          path: 'dashboard',
+          path: '/',
           name: 'Dashboard',
           component: Dashboard
+        }
+      ]
+    },
+    {
+      path: '/chains',
+      name: 'Chain',
+      component: DefaultContainer,
+      children: [
+        {
+          path: '/chains/:chain',
+          name: 'AssetChain',
+          component: AssetChain
         }
       ]
     }

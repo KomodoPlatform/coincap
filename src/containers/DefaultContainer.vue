@@ -6,15 +6,21 @@
     <div class="app-body">
       <main class="main">
         <div class="container-fluid">
+          <div class="row">
+            <h2>
+                <img class="m-top-30 logo" src="../../public/logo_w.svg" height="30"> 
+                Antara Market Cap
+                <b-form-input class="search" placeholder="Search"></b-form-input>
+            </h2>
+            <hr>
+          </div>
           <router-view></router-view>
         </div>
       </main>
     </div>
-    <TheFooter>
-      <div>
-        KomodoPlatform
-      </div>
-    </TheFooter>
+    <div class="footer">
+      Built by <a href="https://komodoplatform.com" target="_blank">KomodoPlatform</a>
+    </div>
   </div>
 </template>
 
@@ -36,12 +42,26 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .main{
     margin-top:10px
   }
-  .header{
+  .header, .footer{
     font-size:12px;
     padding:10px;
+  }
+  h2{
+    width:100%;
+    display: block;
+  }
+  .logo{
+      float:left;
+      margin-right:20px;
+      margin-top:2px;
+  }
+  .search{
+      float:right;
+      width:200px;
+      margin-top:0px;
   }
 </style>
