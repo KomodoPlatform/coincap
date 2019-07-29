@@ -54,6 +54,7 @@ export default {
     },
      goToChain(chain){
       const app = this
+      app.searcher = ''
       app.$router.push({ path: `/chains/${chain.id}` }) 
     }
   },
