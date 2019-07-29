@@ -2,7 +2,7 @@
     <div>
         <loader v-if="isLoading"></loader>
         <h2 class="text-center m-top-30">Top Antara chains ordered by Market Capitalization</h2>
-        <b-table responsive class="f-white m-top-30" @row-clicked="goToChain" striped hover :fields="fields" :items="items"></b-table>
+        <b-table responsive class="f-white m-top-30" @row-clicked="goToChain" striped hover :fields="fields" :items="chains"></b-table>
     </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
             label: 'Last block notarized'
           },
         ],
-        items: [
+        chains: [
           { name: 'Komodo (KMD)', id: 'kmd-komodo', market_cap: '$777,777,777', price: '777USD', vol_24h: '777,777USD', change_24h: '+12%', last_notarization: '2 min ago', cmc_rank: 51 }
         ]
     }

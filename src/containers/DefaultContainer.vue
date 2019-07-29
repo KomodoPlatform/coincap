@@ -9,7 +9,14 @@
             <img v-on:click="goToDashboard" class="m-top-30 logo" src="../../public/logo_w.svg" height="30"> 
           </a>
           Antara Market Cap
-          <b-form-input class="search" placeholder="Search"></b-form-input>
+          <div class="search">
+            <b-form-input v-model="searcher" placeholder="Search"></b-form-input>
+            <div class="search-results" v-if="results.length > 0">
+                <div class="search-result" v-for="chain in results" v-bind:key="chain.id" v-on:click="goToChain(chain)">
+                  <img :src="chain.logo" height="20" style="float:left;margin-right:10px"> {{ chain.name }}
+                </div>
+            </div>
+          </div>
       </h4>
     </div>
     <div class="app-body">
@@ -34,13 +41,31 @@ export default {
   },
   data () {
     return {
-      
+      searcher: '',
+      chains: [
+        { name: 'Komodo (KMD)', id: 'kmd-komodo', market_cap: '$777,777,777', price: '777USD', vol_24h: '777,777USD', change_24h: '+12%', last_notarization: '2 min ago', cmc_rank: 51 }
+      ]
     }
   },
   methods: {
     goToDashboard(){
       const app = this
       app.$router.push({ path: `/` }) 
+    },
+     goToChain(chain){
+      const app = this
+      app.$router.push({ path: `/chains/${chain.id}` }) 
+    }
+  },
+  computed: {
+    results: function(){
+        const app = this;
+        return app.chains.filter(
+          function(chain){
+            if(app.searcher.length === 0){
+              return false
+            }
+            return chain.name.toLowerCase().indexOf(app.searcher.toLowerCase()) >= 0;})
     }
   }
 }
@@ -71,5 +96,24 @@ export default {
       float:right;
       width:200px;
       margin-top:0px;
+      position:relative;
+  }
+  .search-results{
+    position:absolute;
+    top:30px; 
+    left:0;
+    width:100%;
+    background:#fff;
+    border-radius:5px;
+    color:#555;
+    font-size:13px;
+    overflow:hidden;
+  }
+  .search-result{
+    padding:10px;
+  }
+  .search-result:hover{
+    cursor:pointer;
+    background:#ddd
   }
 </style>
