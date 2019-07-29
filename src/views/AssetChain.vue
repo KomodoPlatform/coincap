@@ -13,10 +13,17 @@
                 <strong>Website:</strong> <a target="_blank" href="https://komodoplatform.com">komodoplatform.com</a><br>
                 <strong>Explorer:</strong> <a target="_blank" href="https://kmdexplorer.io">kmdexplorer.io</a><br>
                 <strong>Source Code:</strong> <a target="_blank" href="https://github.com/KomodoPlatform">GitHub</a><br>
-                <strong>Consensus:</strong> PoW / PoS<br>
                 <strong>Community:</strong> <a target="_blank" href="#">Discord</a> • <a target="_blank" href="#">Reddit</a> • <a target="_blank" href="#">Telegram</a><br>
                 <strong>Markets:</strong>  <a target="_blank" href="#">Binance</a> • <a target="_blank" href="#">CryptoBridge</a> • <a target="_blank" href="#">DigitalPrice</a><br>
                 <strong>Info:</strong>  <a target="_blank" href="#">CoinMarketCap</a> • <a target="_blank" href="#">CoinGecko</a>
+                <hr>
+                <h4>Blockchain informations</h4>
+                <strong>Blocks:</strong> 77777<br>
+                <strong>Last notarized block: </strong> 777777777777777777777777<br>
+                <strong>Consensus:</strong> PoW / PoS<br>
+                <strong>Version:</strong> 777777<br>
+                <strong>Protocol:</strong> 777777<br>
+                <strong>Difficulty:</strong> 777777<br>
             </div>
             <div class="col-8">
                 <h3>
