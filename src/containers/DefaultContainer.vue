@@ -50,7 +50,6 @@ export default {
     const app = this
     axios.get(app.apiurl + '/api/v1/tickers').then(result => {
       app.chains = result.data
-      window.chains = app.chains
     }).catch(error => {
         alert('Can\'t get data from API!')
     })

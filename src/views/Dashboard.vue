@@ -20,17 +20,17 @@ export default {
         axios: window.axios,
         fields: [
           {
-            key: 'name',
+            key: 'ticker.name',
             sortable: true,
-            label: 'AssetChain (Ticker)'
+            label: 'AssetChain'
           },
           {
-            key: 'market_cap',
+            key: 'ticker.symbol',
             sortable: true,
-            label: 'Market Cap'
+            label: 'Ticker'
           },
           {
-            key: 'cmc_rank',
+            key: 'ticker.rank',
             sortable: true,
             label: 'Coin Market Cap Rank'
           },
@@ -50,7 +50,7 @@ export default {
             label: '24h Change'
           },
           {
-            key: 'last_notarization',
+            key: 'notarizedhash',
             sortable: false,
             label: 'Last block notarized'
           },
@@ -64,8 +64,17 @@ export default {
   methods: {
     goToChain(chain){
       const app = this
-      app.$router.push({ path: `/chains/${chain.id}` }) 
+      app.$router.push({ path: `/chains/${chain.ticker.id}` }) 
     }
+  },
+  mounted(){
+    const app = this
+    axios.get(app.apiurl + '/api/v1/tickers').then(result => {
+      app.chains = result.data
+      window.chains = app.chains
+    }).catch(error => {
+        alert('Can\'t get data from API!')
+    })
   }
 }
 </script>
