@@ -11,6 +11,12 @@ import router from './router'
 
 // import loader
 import Loader from './shared/Loader'
+// import config file
+import config from './config.json'
+window.config = config
+// import axios
+import axios from 'axios'
+window.axios = axios 
 
 Vue.use(BootstrapVue)
 Vue.component('loader', Loader)

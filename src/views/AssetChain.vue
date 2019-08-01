@@ -65,14 +65,18 @@ export default {
   data: function () {
     return {
         isLoading: true,
-        chain: { name: 'Komodo (KMD)', id: 'kmd-komodo', market_cap: '$777,777,777', price: '777 USD', vol_24h: '777,777USD', change_24h: '+12%', last_notarization: '2 min ago', cmc_rank: 51 }
+        apiurl: window.config.API_URL,
+        axios: window.axios,
+        chain: {}
     }
   },
   mounted (){
     const app = this
-    setTimeout(function(){
-      app.isLoading = false
-    },1000)
+    axios.get(app.apiurl + '/api/v1/tickers/' + app.$route.params.chain ).then(result => {
+      app.chain = result.data
+    }).catch(error => {
+        alert('Can\'t get data from API!')
+    })
   },
   methods: {
     
