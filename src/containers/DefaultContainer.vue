@@ -12,8 +12,8 @@
           <div class="search">
             <b-form-input v-model="searcher" placeholder="Search"></b-form-input>
             <div class="search-results" v-if="results.length > 0">
-                <div class="search-result" v-for="chain in results" v-bind:key="chain.id" v-on:click="goToChain(chain)">
-                  <img :src="chain.logo" height="20" style="float:left;margin-right:10px"> {{ chain.name }}
+                <div class="search-result" v-for="chain in results" v-bind:key="chain.ticker.id" v-on:click="goToChain(chain)">
+                  <img :src="chain.logo" height="20" style="float:left;margin-right:10px"> {{ chain.ticker.name }}
                 </div>
             </div>
           </div>
@@ -62,7 +62,7 @@ export default {
      goToChain(chain){
       const app = this
       app.searcher = ''
-      app.$router.push({ path: `/chains/${chain.id}` }) 
+      app.$router.push({ path: `/chains/${chain.ticker.id}` }) 
     }
   },
   computed: {
@@ -73,7 +73,7 @@ export default {
             if(app.searcher.length === 0){
               return false
             }
-            return chain.name.toLowerCase().indexOf(app.searcher.toLowerCase()) >= 0;})
+            return chain.ticker.name.toLowerCase().indexOf(app.searcher.toLowerCase()) >= 0;})
     }
   }
 }
