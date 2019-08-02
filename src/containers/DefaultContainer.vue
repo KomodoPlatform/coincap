@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="top-header">
-      Cryptocurrencies:  100  •  Markets:  777  •  Market Cap:  $777,777,777  •  24h Vol:  $777,777
+      Cryptocurrencies: {{ chains.length }} • Market Cap: ${{ marketcap_total }} •  24h Vol: ${{ volume_24h_total }}
     </div>
     <div class="header">
       <h4>
@@ -43,13 +43,22 @@ export default {
     return {
       searcher: '',
       chains: [],
-      apiurl: window.config.API_URL
+      apiurl: window.config.API_URL,
+      marketcap_total: 0,
+      volume_24h_total: 0
     }
   },
   mounted (){
     const app = this
     axios.get(app.apiurl + '/api/v1/tickers').then(result => {
       app.chains = result.data
+      for(var x in app.chains){
+        let chain = app.chains[x]
+        app.marketcap_total += chain.ticker.quotes.USD.market_cap
+        app.volume_24h_total += chain.ticker.quotes.USD.volume_24h
+      }
+      app.marketcap_total = app.marketcap_total.toFixed(2)
+      app.volume_24h_total = app.volume_24h_total.toFixed(2)
     }).catch(error => {
         alert('Can\'t get data from API!')
     })
@@ -62,7 +71,7 @@ export default {
      goToChain(chain){
       const app = this
       app.searcher = ''
-      app.$router.push({ path: `/chains/${chain.ticker.id}` }) 
+      app.$router.push({ path: `/chains/${chain.ticker.symbol.toLowerCase()}` }) 
     }
   },
   computed: {
