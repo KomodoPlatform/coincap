@@ -2,8 +2,41 @@
     <div>
         <loader v-if="isLoading"></loader>
         <h2 class="text-center m-top-30">Top Antara chains ordered by Market Capitalization</h2>
-        <div v-if="chains">
-          <b-table responsive class="f-white m-top-30" @row-clicked="goToChain" striped hover :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="chains"></b-table>
+        <div class="row headers">
+          <div class="col-2">
+            Blockchain (Ticker)
+          </div>
+          <div class="col-2">
+            Market Cap
+          </div>
+          <div class="col-2">
+            24H Volume
+          </div>
+          <div class="col-2">
+            24H Volume Change
+          </div>
+          <div class="col-2">
+            Last notarized block
+          </div>
+        </div>
+        <div v-for="chain in chains" v-bind:key="chain.ticker.symbol">
+          <div class="row chain-row" v-on:click="goToChain(chain)">
+            <div class="col-2">
+              {{chain.ticker.name}} ({{chain.ticker.symbol}})
+            </div>
+            <div class="col-2">
+              $ {{chain.ticker.quotes.USD.market_cap}}
+            </div>
+            <div class="col-2">
+              $ {{chain.ticker.quotes.USD.volume_24h}}
+            </div>
+            <div class="col-2 change_24h" v-bind:class="{ negative: chain.isNegative }">
+              <span v-if="chain.ticker.quotes.USD.percent_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.percent_change_24h}}%
+            </div>
+            <div class="col-2">
+              {{chain.notarizedhash}}
+            </div>
+          </div>
         </div>
     </div>
 </template>
@@ -15,53 +48,9 @@ export default {
   components: {},
   data: function () {
     return {
-        isLoading: false,
+        isLoading: true,
         apiurl: window.config.API_URL,
         axios: window.axios,
-        sortBy: 'ticker.quotes.USD.market_cap',
-        sortDesc: true,
-        fields: [
-          {
-            key: 'ticker.name',
-            sortable: true,
-            label: 'AssetChain'
-          },
-          {
-            key: 'ticker.symbol',
-            sortable: true,
-            label: 'Ticker'
-          },
-          {
-            key: 'ticker.rank',
-            sortable: true,
-            label: 'Coin Market Cap Rank'
-          },
-          {
-            key: 'ticker.quotes.USD.market_cap',
-            sortable: true,
-            label: 'Market Cap'
-          },
-          {
-            key: 'ticker.quotes.USD.price',
-            sortable: true,
-            label: 'Price'
-          },
-          {
-            key: 'ticker.quotes.USD.volume_24h',
-            sortable: true,
-            label: '24h Volume'
-          },
-          {
-            key: 'ticker.quotes.USD.percent_change_24h',
-            sortable: true,
-            label: '24h Change'
-          },
-          {
-            key: 'notarizedhash',
-            sortable: false,
-            label: 'Last block notarized'
-          },
-        ],
         chains: []
     }
   },
@@ -72,18 +61,46 @@ export default {
     goToChain(chain){
       const app = this
       app.$router.push({ path: `/chains/${chain.ticker.symbol.toLowerCase()}` }) 
+    },
+    formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+      try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   mounted(){
     const app = this
     axios.get(app.apiurl + '/api/v1/tickers').then(result => {
-      for(var x in result.data){
-        let chain = result.data[x]
-        if(chain.ticker.name !== undefined && chain.ticker.name !== ''){
-          chain.ticker.quotes.USD.price = '$' + chain.ticker.quotes.USD.price
-          chain.ticker.quotes.USD.volume_24h = '$' + chain.ticker.quotes.USD.volume_24h
-          chain.ticker.quotes.USD.market_cap = '$' + chain.ticker.quotes.USD.market_cap
-          app.chains.push(chain)
+      app.isLoading = false
+      app.chains = result.data
+
+      //order chains
+      app.chains.sort(function(a, b) {
+          return b.ticker.quotes.USD.market_cap - a.ticker.quotes.USD.market_cap;
+      });
+
+      //format values
+      for(var x in app.chains){
+        if(app.chains[x].ticker.name === ''){
+          app.chains[x].ticker.name = app.chains[x].ticker.symbol.toLowerCase()
+          app.chains[x].ticker.name = app.chains[x].ticker.name.charAt(0).toUpperCase() + app.chains[x].ticker.name.slice(1)
+        }
+        app.chains[x].ticker.quotes.USD.market_cap = app.formatMoney(app.chains[x].ticker.quotes.USD.market_cap)
+        app.chains[x].ticker.quotes.USD.volume_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.volume_24h)
+        app.chains[x].ticker.quotes.USD.percent_change_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.percent_change_24h)
+
+        if(app.chains[x].ticker.quotes.USD.percent_change_24h < 0){
+            app.chains[x].isNegative = true
         }
       }
     }).catch(error => {
@@ -99,5 +116,19 @@ export default {
     }
     .f-white, .table-hover tbody tr:hover{
         color:#fff!important
+    }
+    .headers{
+      font-size:18px;
+      font-weight:bold;
+      border-bottom:1px solid #ddd;
+      padding-bottom:10px;
+      margin: 10px 0;
+    }
+    .chain-row{
+      padding:5px 0;
+    }
+    .chain-row:hover{
+      cursor:pointer;
+      opacity: 0.6;
     }
 </style>

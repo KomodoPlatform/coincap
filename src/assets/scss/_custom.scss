@@ -28,5 +28,11 @@ body{
 }
   
 .autocomplete-input-no-results:not(.autocomplete-input-focused) ~ .autocomplete-result-list {
-display: none;
+    display: none;
+}
+.change_24h{
+    color:greenyellow
+}
+.negative{
+    color:#f00
 }

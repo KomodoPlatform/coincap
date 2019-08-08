@@ -57,8 +57,8 @@ export default {
         app.marketcap_total += chain.ticker.quotes.USD.market_cap
         app.volume_24h_total += chain.ticker.quotes.USD.volume_24h
       }
-      app.marketcap_total = app.marketcap_total.toFixed(2)
-      app.volume_24h_total = app.volume_24h_total.toFixed(2)
+      app.marketcap_total = app.formatMoney(app.marketcap_total)
+      app.volume_24h_total = app.formatMoney(app.volume_24h_total)
     }).catch(error => {
         alert('Can\'t get data from API!')
     })
@@ -72,6 +72,21 @@ export default {
       const app = this
       app.searcher = ''
       app.$router.push({ path: `/chains/${chain.ticker.symbol.toLowerCase()}` }) 
+    },
+    formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+      try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   computed: {

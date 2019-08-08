@@ -92,12 +92,6 @@ export default {
 </script>
 
 <style scoped>
-    .change_24h{
-        color:greenyellow
-    }
-    .negative{
-        color:#f00
-    }
     .detail-row strong{
         margin-right:10px;
     }
