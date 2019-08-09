@@ -8,19 +8,42 @@
                     <span style="font-size:15px">{{ chain.ticker.symbol }}</span>
                 </h3>
                 <br>
-                <strong>Rank:</strong> 1<br>
-                <strong>CMC Rank:</strong> {{ chain.ticker.rank }}<br>
-                <strong>Website:</strong> <a target="_blank" href="https://komodoplatform.com">komodoplatform.com</a><br>
-                <strong>Explorer:</strong> <a target="_blank" href="https://kmdexplorer.io">kmdexplorer.io</a><br>
-                <strong>Source Code:</strong> <a target="_blank" href="https://github.com/KomodoPlatform">GitHub</a><br>
-                <strong>Community:</strong> <a target="_blank" href="#">Discord</a> • <a target="_blank" href="#">Reddit</a> • <a target="_blank" href="#">Telegram</a><br>
-                <strong>Markets:</strong>  <a target="_blank" href="#">Binance</a> • <a target="_blank" href="#">CryptoBridge</a> • <a target="_blank" href="#">DigitalPrice</a><br>
-                <strong>Info:</strong>  <a target="_blank" href="#">CoinMarketCap</a> • <a target="_blank" href="#">CoinGecko</a>
+                <strong>CMC Rank:</strong> {{ chain.ticker.rank }}<br><br>
+                <strong>Website:</strong><br>
+                <span v-for="link in chain.additional_data.links.homepage" v-bind:key="link">
+                    <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
+                </span>
+                <br>
+                <strong>Blockchain explorer:</strong><br>
+                <span v-for="link in chain.additional_data.links.blockchain_site" v-bind:key="link">
+                    <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
+                </span>
+                <br>
+                <strong>Source Code:</strong><br>
+                <span v-for="(link, index)  in chain.additional_data.links.repos_url" v-bind:key="index">
+                    <span v-if="link.length > 0">
+                        <span v-for="url in link" v-bind:key="url">
+                            <a target="_blank" v-if="url !== ''" :href="link">{{url}}<br></a>
+                        </span>
+                    </span>
+                </span>
+                <br>
+                <div v-if="chain.additional_data.links.announcement_url.length > 0">
+                    <strong>Announcements:</strong><br>
+                    <span v-for="link in chain.additional_data.links.announcement_url" v-bind:key="link">
+                        <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
+                    </span>
+                    <br>
+                </div>
+                <strong>Chat:</strong><br>
+                <span v-for="link in chain.additional_data.links.chat_url" v-bind:key="link">
+                    <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
+                </span>
+                <br>
                 <hr>
                 <h4>Blockchain informations</h4>
                 <strong>Blocks:</strong> {{ chain.status.info.blocks }}<br>
                 <strong>Last notarized block: </strong> {{ chain.status.info.notarized }}<br>
-                <strong>Consensus:</strong> PoW / PoS<br>
                 <strong>Version:</strong> {{ chain.status.info.version }}<br>
                 <strong>Protocol:</strong> {{ chain.status.info.protocolversion }}<br>
                 <strong>Difficulty:</strong> {{ chain.status.info.difficulty }}<br>
@@ -34,19 +57,19 @@
                 </h3>
                 <div class="row">
                     <div class="col">
-                        Market Cap<br>
+                        <strong>Market Cap</strong><br>
                         ${{ chain.ticker.quotes.USD.market_cap }}
                     </div>
                     <div class="col">
-                        Volume (24h)<br>
+                        <strong>Volume (24h)</strong><br>
                         ${{ chain.ticker.quotes.USD.volume_24h }}
                     </div>
                     <div class="col">
-                        Circulating Supply<br>
+                        <strong>Circulating Supply</strong><br>
                         {{ chain.ticker.circulating_supply }} {{ chain.ticker.symbol }}
                     </div>
                     <div class="col">
-                        Max Supply<br>
+                        <strong>Max Supply</strong><br>
                         {{ chain.ticker.max_supply }} {{ chain.ticker.symbol }}
                     </div>
                 </div>
@@ -81,12 +104,28 @@ export default {
       if(app.chain.ticker.quotes.USD.percent_change_24h < 0){
           app.isNegative = true
       }
+      app.chain.ticker.quotes.USD.market_cap = app.formatMoney(app.chain.ticker.quotes.USD.market_cap)
+      app.chain.ticker.quotes.USD.volume_24h = app.formatMoney(app.chain.ticker.quotes.USD.volume_24h)
     }).catch(error => {
         alert('Can\'t get data from API!')
     })
   },
   methods: {
-    
+    formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+      try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }
 </script>

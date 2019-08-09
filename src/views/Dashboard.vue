@@ -9,13 +9,25 @@
           <div class="col-2">
             Market Cap
           </div>
-          <div class="col-2">
+          <div class="col-1">
+            Last price
+          </div>
+          <div class="col-1">
+            24H Price Change
+          </div>
+          <div class="col-1">
             24H Volume
           </div>
-          <div class="col-2">
+          <div class="col-1">
             24H Volume Change
           </div>
-          <div class="col-2">
+          <div class="col-1">
+            Current block height
+          </div>
+          <div class="col-1">
+            Last notarized height
+          </div>
+          <div class="col-1">
             Last notarized block
           </div>
         </div>
@@ -27,13 +39,25 @@
             <div class="col-2">
               $ {{chain.ticker.quotes.USD.market_cap}}
             </div>
-            <div class="col-2">
-              $ {{chain.ticker.quotes.USD.volume_24h}}
+            <div class="col-1">
+              $ {{chain.ticker.quotes.USD.price}}
             </div>
-            <div class="col-2 change_24h" v-bind:class="{ negative: chain.isNegative }">
+            <div class="col-1 change_24h" v-bind:class="{ negative: chain.priceNegative }">
               <span v-if="chain.ticker.quotes.USD.percent_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.percent_change_24h}}%
             </div>
-            <div class="col-2">
+            <div class="col-1">
+              $ {{chain.ticker.quotes.USD.volume_24h}}
+            </div>
+            <div class="col-1 change_24h" v-bind:class="{ negative: chain.volNegative }">
+              <span v-if="chain.ticker.quotes.USD.volume_24h_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.volume_24h_change_24h}}%
+            </div>
+            <div class="col-1">
+              {{chain.status.info.blocks}}
+            </div>
+            <div class="col-1">
+              {{chain.status.info.notarized}}
+            </div>
+            <div class="col-1">
               {{chain.notarizedhash}}
             </div>
           </div>
@@ -60,7 +84,7 @@ export default {
   methods: {
     goToChain(chain){
       const app = this
-      app.$router.push({ path: `/chains/${chain.ticker.symbol.toLowerCase()}` }) 
+      app.$router.push({ path: `/chains/${chain.komodo_coin_id.toLowerCase()}` }) 
     },
     formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
       try {
@@ -97,10 +121,17 @@ export default {
         }
         app.chains[x].ticker.quotes.USD.market_cap = app.formatMoney(app.chains[x].ticker.quotes.USD.market_cap)
         app.chains[x].ticker.quotes.USD.volume_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.volume_24h)
+        app.chains[x].ticker.quotes.USD.price = app.formatMoney(app.chains[x].ticker.quotes.USD.price)
+        app.chains[x].ticker.quotes.USD.volume_24h_change_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.volume_24h_change_24h)
         app.chains[x].ticker.quotes.USD.percent_change_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.percent_change_24h)
 
+        app.chains[x].notarizedhash = app.chains[x].notarizedhash.substr(0,6) + '...' + app.chains[x].notarizedhash.substr(-6)
+
         if(app.chains[x].ticker.quotes.USD.percent_change_24h < 0){
-            app.chains[x].isNegative = true
+            app.chains[x].priceNegative = true
+        }
+        if(app.chains[x].ticker.quotes.USD.volume_24h_change_24h < 0){
+            app.chains[x].volNegative = true
         }
       }
     }).catch(error => {
