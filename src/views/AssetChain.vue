@@ -2,12 +2,7 @@
     <div>
         <loader v-if="isLoading"></loader>
         <div class="row m-top-30">
-            <div class="col-4 detail-row">
-                <h3>
-                    {{ chain.ticker.name }}
-                    <span style="font-size:15px">{{ chain.ticker.symbol }}</span>
-                </h3>
-                <br>
+            <div class="col-12 col-md-4 detail-row">
                 <strong>CMC Rank:</strong> {{ chain.ticker.rank }}<br><br>
                 <strong>Website:</strong><br>
                 <span v-for="link in chain.additional_data.links.homepage" v-bind:key="link">
@@ -28,13 +23,11 @@
                     </span>
                 </span>
                 <br>
-                <div v-if="chain.additional_data.links.announcement_url.length > 0">
-                    <strong>Announcements:</strong><br>
-                    <span v-for="link in chain.additional_data.links.announcement_url" v-bind:key="link">
-                        <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
-                    </span>
-                    <br>
-                </div>
+                <strong>Announcements:</strong><br>
+                <span v-for="link in chain.additional_data.links.announcement_url" v-bind:key="link">
+                    <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
+                </span>
+                <br>
                 <strong>Chat:</strong><br>
                 <span v-for="link in chain.additional_data.links.chat_url" v-bind:key="link">
                     <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
@@ -48,7 +41,11 @@
                 <strong>Protocol:</strong> {{ chain.status.info.protocolversion }}<br>
                 <strong>Difficulty:</strong> {{ chain.status.info.difficulty }}<br>
             </div>
-            <div class="col-8">
+            <div class="col-12 col-md-8">
+                <h3>
+                    {{ chain.ticker.name }}
+                    <span style="font-size:15px">{{ chain.ticker.symbol }}</span>
+                </h3>
                 <h3>
                     ${{ chain.ticker.quotes.USD.price }}
                     <span style="font-size:15px" class="change_24h" v-bind:class="{ negative: isNegative }">
@@ -92,7 +89,20 @@ export default {
         isLoading: true,
         apiurl: window.config.API_URL,
         axios: window.axios,
-        chain: {},
+        chain: {
+            ticker:{
+                rank: '',
+                quotes: {
+                    USD: {}
+                }
+            },
+            additional_data: {
+                links: {}
+            },
+            status: {
+                info: {}
+            }
+        },
         isNegative: false
     }
   },

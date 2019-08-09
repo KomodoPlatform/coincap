@@ -1,63 +1,62 @@
 <template>
     <div>
         <loader v-if="isLoading"></loader>
-        <h2 class="text-center m-top-30">Top Antara chains ordered by Market Capitalization</h2>
         <div class="row headers">
-          <div class="col-2">
+          <div class="col-12 col-md-2">
             Blockchain (Ticker)
           </div>
-          <div class="col-2">
+          <div class="col-12 col-md-2">
             Market Cap
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             Last price
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             24H Price Change
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             24H Volume
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             24H Volume Change
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             Current block height
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             Last notarized height
           </div>
-          <div class="col-1">
+          <div class="col-12 col-md-1">
             Last notarized block
           </div>
         </div>
         <div v-for="chain in chains" v-bind:key="chain.ticker.symbol">
           <div class="row chain-row" v-on:click="goToChain(chain)">
-            <div class="col-2">
+            <div class="col-12 col-md-2">
               {{chain.ticker.name}} ({{chain.ticker.symbol}})
             </div>
-            <div class="col-2">
+            <div class="col-12 col-md-2">
               $ {{chain.ticker.quotes.USD.market_cap}}
             </div>
-            <div class="col-1">
+            <div class="col-12 col-md-1">
               $ {{chain.ticker.quotes.USD.price}}
             </div>
-            <div class="col-1 change_24h" v-bind:class="{ negative: chain.priceNegative }">
+            <div class="col-12 col-md-1 change_24h" v-bind:class="{ negative: chain.priceNegative }">
               <span v-if="chain.ticker.quotes.USD.percent_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.percent_change_24h}}%
             </div>
-            <div class="col-1">
+            <div class="col-12 col-md-1">
               $ {{chain.ticker.quotes.USD.volume_24h}}
             </div>
-            <div class="col-1 change_24h" v-bind:class="{ negative: chain.volNegative }">
+            <div class="col-12 col-md-1 change_24h" v-bind:class="{ negative: chain.volNegative }">
               <span v-if="chain.ticker.quotes.USD.volume_24h_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.volume_24h_change_24h}}%
             </div>
-            <div class="col-1">
+            <div class="col-12 col-md-1">
               {{chain.status.info.blocks}}
             </div>
-            <div class="col-1">
+            <div class="col-12 col-md-1">
               {{chain.status.info.notarized}}
             </div>
-            <div class="col-1">
+            <div class="col-12 col-md-1">
               {{chain.notarizedhash}}
             </div>
           </div>
