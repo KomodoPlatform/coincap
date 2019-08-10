@@ -8,17 +8,11 @@
           <div class="col-12 col-md-2">
             Market Cap
           </div>
-          <div class="col-12 col-md-1">
-            Last price
+          <div class="col-12 col-md-2">
+            Last price (24h change)
           </div>
-          <div class="col-12 col-md-1">
-            24H Price Change
-          </div>
-          <div class="col-12 col-md-1">
-            24H Volume
-          </div>
-          <div class="col-12 col-md-1">
-            24H Volume Change
+          <div class="col-12 col-md-2">
+            24H Volume (24h change)
           </div>
           <div class="col-12 col-md-1">
             Current block height
@@ -38,17 +32,13 @@
             <div class="col-12 col-md-2">
               $ {{chain.ticker.quotes.USD.market_cap}}
             </div>
-            <div class="col-12 col-md-1">
+            <div class="col-12 col-md-2">
               $ {{chain.ticker.quotes.USD.price}}
+              (<span class="change_24h" v-bind:class="{ negative: chain.priceNegative }"><span v-if="chain.ticker.quotes.USD.percent_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.percent_change_24h}}%</span>)
             </div>
-            <div class="col-12 col-md-1 change_24h" v-bind:class="{ negative: chain.priceNegative }">
-              <span v-if="chain.ticker.quotes.USD.percent_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.percent_change_24h}}%
-            </div>
-            <div class="col-12 col-md-1">
+            <div class="col-12 col-md-2">
               $ {{chain.ticker.quotes.USD.volume_24h}}
-            </div>
-            <div class="col-12 col-md-1 change_24h" v-bind:class="{ negative: chain.volNegative }">
-              <span v-if="chain.ticker.quotes.USD.volume_24h_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.volume_24h_change_24h}}%
+              (<span class="change_24h" v-bind:class="{ negative: chain.volNegative }"><span v-if="chain.ticker.quotes.USD.volume_24h_change_24h >= 0">+</span>{{chain.ticker.quotes.USD.volume_24h_change_24h}}%</span>)
             </div>
             <div class="col-12 col-md-1">
               {{chain.status.info.blocks}}
@@ -148,7 +138,7 @@ export default {
         color:#fff!important
     }
     .headers{
-      font-size:18px;
+      font-size:14px;
       font-weight:bold;
       border-bottom:1px solid #ddd;
       padding-bottom:10px;

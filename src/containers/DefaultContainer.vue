@@ -71,7 +71,7 @@ export default {
      goToChain(chain){
       const app = this
       app.searcher = ''
-      app.$router.push({ path: `/chains/${chain.ticker.symbol.toLowerCase()}` }) 
+      app.$router.push({ path: `/chains/${chain.komodo_coin_id.toLowerCase()}` }) 
     },
     formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
       try {

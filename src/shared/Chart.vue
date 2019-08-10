@@ -5,20 +5,24 @@
   //Exporting this so it can be used in other components
   export default {
     extends: Line,
+    props: ['coin'],
     data () {
       return {
+        apiurl: window.config.API_URL,
+        axios: window.axios,
+        chart: [],
         datacollection: {
           //Data to be represented on x-axis
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          labels: [],
           datasets: [
             {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              pointBackgroundColor: 'white',
+              label: '',
+              backgroundColor: '#41ead4',
+              pointBackgroundColor: 'transparent',
               borderWidth: 1,
-              pointBorderColor: '#249EBF',
+              pointBorderColor: 'transparent',
               //Data to be represented on y-axis
-              data: [40, 20, 30, 50, 90, 10, 20, 40, 50, 70, 90, 100]
+              data: []
             }
           ]
         },
@@ -48,8 +52,20 @@
       }
     },
     mounted () {
+      const app = this
+      app.datacollection.datasets[0].label = app.coin.toUpperCase() + '/USD'
+      axios.get(app.apiurl + '/api/v1/charts/' + app.coin ).then(result => {
+          app.chart = result.data.prices
+          for(var i = 0; i < app.chart.length; i++){
+            let value = app.chart[i]
+            var ts = new Date(value[0]);
+            app.datacollection.labels.push(ts.toDateString())
+            app.datacollection.datasets[0].data.push(value[1])
+          }
+          this.renderChart(app.datacollection, this.options)
+      })
       //renderChart function renders the chart with the datacollection and options object.
-      this.renderChart(this.datacollection, this.options)
+      //
     }
   }
 </script>

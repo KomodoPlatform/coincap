@@ -2,7 +2,7 @@
     <div>
         <loader v-if="isLoading"></loader>
         <div class="row m-top-30">
-            <div class="col-12 col-md-4 detail-row">
+            <div class="col-12 col-md-4 detail-row" v-if="chain.additional_data">
                 <strong>CMC Rank:</strong> {{ chain.ticker.rank }}<br><br>
                 <strong>Website:</strong><br>
                 <span v-for="link in chain.additional_data.links.homepage" v-bind:key="link">
@@ -70,7 +70,7 @@
                         {{ chain.ticker.max_supply }} {{ chain.ticker.symbol }}
                     </div>
                 </div>
-                <line-chart></line-chart>
+                <line-chart v-bind:coin="$route.params.chain"></line-chart>
             </div>
         </div>
     </div>
@@ -89,6 +89,7 @@ export default {
         isLoading: true,
         apiurl: window.config.API_URL,
         axios: window.axios,
+        chart: [],
         chain: {
             ticker:{
                 rank: '',
