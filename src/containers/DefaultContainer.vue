@@ -140,6 +140,7 @@ export default {
     color:#555;
     font-size:13px;
     overflow:hidden;
+    z-index:9999;
   }
   .search-result{
     padding:10px;

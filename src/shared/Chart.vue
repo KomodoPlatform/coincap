@@ -12,16 +12,14 @@
         axios: window.axios,
         chart: [],
         datacollection: {
-          //Data to be represented on x-axis
           labels: [],
           datasets: [
             {
               label: '',
               backgroundColor: '#41ead4',
               pointBackgroundColor: 'transparent',
-              borderWidth: 1,
+              borderWidth: 2,
               pointBorderColor: 'transparent',
-              //Data to be represented on y-axis
               data: []
             }
           ]
@@ -35,6 +33,12 @@
               },
               gridLines: {
                 display: true
+              },
+              ticks: {
+                  // Include a dollar sign in the ticks
+                  callback: function(value, index, values) {
+                      return '$' + value;
+                  }
               }
             }],
             xAxes: [ {
@@ -63,6 +67,7 @@
             app.datacollection.datasets[0].data.push(value[1])
           }
           this.renderChart(app.datacollection, this.options)
+          
       })
       //renderChart function renders the chart with the datacollection and options object.
       //

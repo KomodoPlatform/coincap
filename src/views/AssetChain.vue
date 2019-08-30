@@ -43,15 +43,16 @@
             </div>
             <div class="col-12 col-md-8">
                 <h3>
-                    {{ chain.ticker.name }}
+                    <img :src="chain.ticker.logo" style="float:left; margin-right: 15px; margin-top:8px" width="50" height="50"> {{ chain.ticker.name }}
                     <span style="font-size:15px">{{ chain.ticker.symbol }}</span>
                 </h3>
                 <h3>
                     ${{ chain.ticker.quotes.USD.price }}
                     <span style="font-size:15px" class="change_24h" v-bind:class="{ negative: isNegative }">
-                        (<span v-if="chain.ticker.quotes.USD.percent_change_24h > 0">+</span>{{ chain.ticker.quotes.USD.percent_change_24h }})
+                        (<span v-if="chain.ticker.quotes.USD.percent_change_24h > 0">+</span>{{ chain.ticker.quotes.USD.percent_change_24h }}%)
                     </span>
                 </h3>
+                <br>
                 <div class="row">
                     <div class="col">
                         <strong>Market Cap</strong><br>
@@ -70,6 +71,7 @@
                         {{ chain.ticker.max_supply }} {{ chain.ticker.symbol }}
                     </div>
                 </div>
+                <br><div class="text-center">USD price in the past 2 months</div><br>
                 <line-chart v-bind:coin="$route.params.chain"></line-chart>
             </div>
         </div>
@@ -115,6 +117,7 @@ export default {
       if(app.chain.ticker.quotes.USD.percent_change_24h < 0){
           app.isNegative = true
       }
+      app.chain.ticker.logo = 'https://raw.githubusercontent.com/jl777/coins/master/icons/'+ app.chain.ticker.symbol.toLowerCase()+'.png'
       app.chain.ticker.quotes.USD.market_cap = app.formatMoney(app.chain.ticker.quotes.USD.market_cap)
       app.chain.ticker.quotes.USD.volume_24h = app.formatMoney(app.chain.ticker.quotes.USD.volume_24h)
     }).catch(error => {
