@@ -10,7 +10,7 @@
           </a>
           Antara Market Cap
           <div class="search">
-            <b-form-input v-model="searcher" placeholder="Search"></b-form-input>
+            <b-form-input v-on:keyup.13="selectFirstResult()" autocomplete="off" v-model="searcher" placeholder="Search"></b-form-input>
             <div class="search-results" v-if="results.length > 0">
                 <div class="search-result" v-for="chain in results" v-bind:key="chain.ticker.id" v-on:click="goToChain(chain)">
                   <img :src="chain.logo" height="20" style="float:left;margin-right:10px"> {{ chain.ticker.name }}
@@ -42,6 +42,7 @@ export default {
   data () {
     return {
       searcher: '',
+      selected: '',
       chains: [],
       apiurl: window.config.API_URL,
       marketcap_total: 0,
@@ -54,6 +55,7 @@ export default {
       app.chains = result.data
       for(var x in app.chains){
         let chain = app.chains[x]
+        app.chains[x].logo = 'https://raw.githubusercontent.com/jl777/coins/master/icons/'+ app.chains[x].ticker.symbol.toLowerCase()+'.png'
         app.marketcap_total += chain.ticker.quotes.USD.market_cap
         app.volume_24h_total += chain.ticker.quotes.USD.volume_24h
       }
@@ -68,10 +70,21 @@ export default {
       const app = this
       app.$router.push({ path: `/` }) 
     },
-     goToChain(chain){
+    selectFirstResult(){
+      const app = this
+      if(app.results.length > 0){
+        if(app.selected === ''){
+          app.searcher = app.results[0].ticker.name
+          app.goToChain(app.results[0])
+        }else{
+          app.goToChain(app.results[app.selected])
+        }
+      }
+    },
+    goToChain(chain){
       const app = this
       app.searcher = ''
-      app.$router.push({ path: `/chains/${chain.komodo_coin_id.toLowerCase()}` }) 
+      window.location = `/#/chains/${chain.komodo_coin_id.toLowerCase()}`
     },
     formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
       try {

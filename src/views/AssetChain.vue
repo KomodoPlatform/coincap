@@ -71,7 +71,6 @@
                         {{ chain.ticker.max_supply }} {{ chain.ticker.symbol }}
                     </div>
                 </div>
-                <br><div class="text-center">USD price in the past 2 months</div><br>
                 <line-chart v-bind:coin="$route.params.chain"></line-chart>
             </div>
         </div>
@@ -86,6 +85,11 @@ export default {
   components: {
       LineChart
   },
+  watch:{
+    $route (to, from){
+        this.$router.go(0)
+    }
+  }, 
   data: function () {
     return {
         isLoading: true,
@@ -110,23 +114,26 @@ export default {
     }
   },
   mounted (){
-    const app = this
-    axios.get(app.apiurl + '/api/v1/tickers/' + app.$route.params.chain ).then(result => {
-      app.chain = result.data
-      app.isLoading = false
-      if(app.chain.ticker.quotes.USD.percent_change_24h < 0){
-          app.isNegative = true
-      }
-      app.chain.ticker.logo = 'https://raw.githubusercontent.com/jl777/coins/master/icons/'+ app.chain.ticker.symbol.toLowerCase()+'.png'
-      app.chain.ticker.quotes.USD.market_cap = app.formatMoney(app.chain.ticker.quotes.USD.market_cap)
-      app.chain.ticker.quotes.USD.volume_24h = app.formatMoney(app.chain.ticker.quotes.USD.volume_24h)
-      app.chain.ticker.circulating_supply = app.formatMoney(app.chain.ticker.circulating_supply)
-      app.chain.ticker.max_supply = app.formatMoney(app.chain.ticker.max_supply)
-    }).catch(error => {
-        alert('Can\'t get data from API!')
-    })
+    this.loadChain()
   },
   methods: {
+    loadChain(){
+        const app = this
+        axios.get(app.apiurl + '/api/v1/tickers/' + app.$route.params.chain ).then(result => {
+        app.chain = result.data
+        app.isLoading = false
+        if(app.chain.ticker.quotes.USD.percent_change_24h < 0){
+            app.isNegative = true
+        }
+        app.chain.ticker.logo = 'https://raw.githubusercontent.com/jl777/coins/master/icons/'+ app.chain.ticker.symbol.toLowerCase()+'.png'
+        app.chain.ticker.quotes.USD.market_cap = app.formatMoney(app.chain.ticker.quotes.USD.market_cap)
+        app.chain.ticker.quotes.USD.volume_24h = app.formatMoney(app.chain.ticker.quotes.USD.volume_24h)
+        app.chain.ticker.circulating_supply = app.formatMoney(app.chain.ticker.circulating_supply)
+        app.chain.ticker.max_supply = app.formatMoney(app.chain.ticker.max_supply)
+        }).catch(error => {
+            alert('Can\'t get data from API!')
+        })
+    },
     formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
       try {
         decimalCount = Math.abs(decimalCount);

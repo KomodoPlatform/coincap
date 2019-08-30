@@ -57,6 +57,8 @@
     },
     mounted () {
       const app = this
+      app.datacollection.datasets[0].data = []
+      app.datacollection.labels = []
       app.datacollection.datasets[0].label = app.coin.toUpperCase() + '/USD'
       axios.get(app.apiurl + '/api/v1/charts/' + app.coin ).then(result => {
           app.chart = result.data.prices
@@ -67,7 +69,6 @@
             app.datacollection.datasets[0].data.push(value[1])
           }
           this.renderChart(app.datacollection, this.options)
-          
       })
       //renderChart function renders the chart with the datacollection and options object.
       //
