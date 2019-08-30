@@ -120,6 +120,8 @@ export default {
       app.chain.ticker.logo = 'https://raw.githubusercontent.com/jl777/coins/master/icons/'+ app.chain.ticker.symbol.toLowerCase()+'.png'
       app.chain.ticker.quotes.USD.market_cap = app.formatMoney(app.chain.ticker.quotes.USD.market_cap)
       app.chain.ticker.quotes.USD.volume_24h = app.formatMoney(app.chain.ticker.quotes.USD.volume_24h)
+      app.chain.ticker.circulating_supply = app.formatMoney(app.chain.ticker.circulating_supply)
+      app.chain.ticker.max_supply = app.formatMoney(app.chain.ticker.max_supply)
     }).catch(error => {
         alert('Can\'t get data from API!')
     })
