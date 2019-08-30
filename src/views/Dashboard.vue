@@ -2,20 +2,20 @@
     <div>
         <loader v-if="isLoading"></loader>
         <div class="row headers">
-          <div class="col-12 col-md-2">
-            Blockchain (Ticker)
+          <div class="col-12 col-md-2 sort-header" v-on:click="sortChainsBy('name')">
+            Blockchain (Ticker) <span v-if="(sort === 'asc' && field ==='name')" class="arrow up">↑</span><span v-if="(sort === 'desc' && field ==='name')" class="arrow down">↓</span>
           </div>
-          <div class="col-12 col-md-2">
-            Market Cap
+          <div class="col-12 col-md-2 sort-header" v-on:click="sortChainsBy('marketcap')">
+            Market Cap <span v-if="(sort === 'asc' && field ==='marketcap')"  class="arrow up">↑</span><span v-if="(sort === 'desc' && field ==='marketcap')" class="arrow down">↓</span>
           </div>
-          <div class="col-12 col-md-2">
-            Last price (24h change)
+          <div class="col-12 col-md-2 sort-header" v-on:click="sortChainsBy('lastprice')">
+            Last price (24h change) <span v-if="(sort === 'asc' && field ==='lastprice')" class="arrow up">↑</span><span v-if="(sort === 'desc' && field ==='lastprice')" class="arrow down">↓</span>
           </div>
-          <div class="col-12 col-md-2">
-            24H Volume (24h change)
+          <div class="col-12 col-md-2 sort-header" v-on:click="sortChainsBy('volume')">
+            24H Volume (24h change) <span v-if="(sort === 'asc' && field ==='volume')" class="arrow up">↑</span><span v-if="(sort === 'desc' && field ==='volume')" class="arrow down">↓</span>
           </div>
           <div class="col-12 col-md-1">
-            Current block height
+            Block height
           </div>
           <div class="col-12 col-md-1">
             Last notarized height
@@ -27,7 +27,7 @@
         <div v-for="chain in chains" v-bind:key="chain.ticker.symbol">
           <div class="row chain-row" v-on:click="goToChain(chain)">
             <div class="col-12 col-md-2">
-              {{chain.ticker.name}} ({{chain.ticker.symbol}})
+              <img :src="chain.ticker.logo" style="float:left; margin-right: 10px" width="25" height="25"> {{chain.ticker.name}} ({{chain.ticker.symbol}})
             </div>
             <div class="col-12 col-md-2">
               $ {{chain.ticker.quotes.USD.market_cap}}
@@ -64,7 +64,9 @@ export default {
         isLoading: true,
         apiurl: window.config.API_URL,
         axios: window.axios,
-        chains: []
+        chains: [],
+        sort: 'desc',
+        field: 'marketcap'
     }
   },
   mounted (){
@@ -89,6 +91,40 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    sortChainsBy(what){
+      const app = this
+      if(app.field === what){
+        if(app.sort === 'asc'){
+          app.sort = 'desc'
+        }else{
+          app.sort = 'asc'
+        }
+      }else{
+        app.sort = 'desc'
+      }
+      app.field = what
+
+      app.chains.sort(function(a, b) {
+          if(app.field !== 'name'){
+            if(app.sort === 'desc'){
+              return parseFloat(b.filters[app.field]) - parseFloat(a.filters[app.field]);
+            }else{
+              return parseFloat(a.filters[app.field]) - parseFloat(b.filters[app.field]);
+            }
+          }else{
+            var nameA=a.filters[app.field].toLowerCase(), nameB=b.filters[app.field].toLowerCase();
+            if(app.sort === 'desc'){
+              if(nameA > nameB){
+                return -1
+              }
+            }else{
+              if(nameA < nameB){
+                return -1
+              }
+            }
+          }
+      });
     }
   },
   mounted(){
@@ -108,6 +144,13 @@ export default {
           app.chains[x].ticker.name = app.chains[x].ticker.symbol.toLowerCase()
           app.chains[x].ticker.name = app.chains[x].ticker.name.charAt(0).toUpperCase() + app.chains[x].ticker.name.slice(1)
         }
+        app.chains[x].filters = {}
+        app.chains[x].filters.marketcap = app.chains[x].ticker.quotes.USD.market_cap
+        app.chains[x].filters.lastprice = app.chains[x].ticker.quotes.USD.price
+        app.chains[x].filters.volume = app.chains[x].ticker.quotes.USD.volume_24h
+        app.chains[x].filters.name = app.chains[x].ticker.name
+
+        app.chains[x].ticker.logo = 'https://raw.githubusercontent.com/jl777/coins/master/icons/'+ app.chains[x].ticker.symbol.toLowerCase()+'.png'
         app.chains[x].ticker.quotes.USD.market_cap = app.formatMoney(app.chains[x].ticker.quotes.USD.market_cap)
         app.chains[x].ticker.quotes.USD.volume_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.volume_24h)
         app.chains[x].ticker.quotes.USD.price = app.formatMoney(app.chains[x].ticker.quotes.USD.price)
@@ -115,6 +158,7 @@ export default {
         app.chains[x].ticker.quotes.USD.percent_change_24h = app.formatMoney(app.chains[x].ticker.quotes.USD.percent_change_24h)
 
         app.chains[x].notarizedhash = app.chains[x].notarizedhash.substr(0,6) + '...' + app.chains[x].notarizedhash.substr(-6)
+
 
         if(app.chains[x].ticker.quotes.USD.percent_change_24h < 0){
             app.chains[x].priceNegative = true
@@ -139,16 +183,22 @@ export default {
     }
     .headers{
       font-size:14px;
-      font-weight:bold;
       border-bottom:1px solid #ddd;
       padding-bottom:10px;
-      margin: 10px 0;
-    }
-    .chain-row{
-      padding:5px 0;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
     .chain-row:hover{
       cursor:pointer;
       opacity: 0.6;
+    }
+    .arrow{
+      font-size:20px;
+      float:right;
+      margin-top:-6px;
+    }
+    .sort-header:hover{
+      cursor:pointer;
+      opacity: 0.5;
     }
 </style>
