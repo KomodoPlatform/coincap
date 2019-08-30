@@ -22,13 +22,13 @@
                         </span>
                     </span>
                 </span>
-                <br>
-                <strong>Announcements:</strong><br>
+                <br v-if="chain.additional_data.links.announcement_url">
+                <strong v-if="chain.additional_data.links.announcement_url">Announcements:</strong><br>
                 <span v-for="link in chain.additional_data.links.announcement_url" v-bind:key="link">
                     <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
                 </span>
-                <br>
-                <strong>Chat:</strong><br>
+                <br v-if="chain.additional_data.links.chat_url">
+                <strong  v-if="chain.additional_data.links.chat_url">Chat:</strong><br>
                 <span v-for="link in chain.additional_data.links.chat_url" v-bind:key="link">
                     <a target="_blank" v-if="link !== ''" :href="link">{{link}}<br></a>
                 </span>
